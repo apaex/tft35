@@ -161,6 +161,33 @@ def handle_m92(cmd):
         "ok\n"
     )
 
+
+=======
+#вентиляторы    
+    
+def handle_m106(cmd):
+    global fan_cache
+
+    parts = cmd.split()
+
+    if len(parts) == 1:
+        # это запрос!
+        pwm = int(fan_cache * 255)
+        return f"Fan:{pwm}\nok\n"
+
+    for p in parts:
+        if p.startswith("S"):
+            val = int(p[1:])
+            fan_cache = val / 255.0
+            
+    send(cmd)
+    return "ok\n"
+
+def handle_m123(cmd):
+    pwm = int(fan_cache * 255)
+    return f"Fan:{pwm}\nok\n"
+
+
 # -----------------------
 # ПОТОК ОБРАБОТКИ
 # -----------------------

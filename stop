@@ -1,1 +1,1 @@
-sudo systemctl stop tft35
+systemctl stop tft35
