@@ -1,2 +1,2 @@
-systemctl daemon-reload
-systemctl restart tft35
+sudo systemctl daemon-reload
+sudo systemctl restart tft35

@@ -1,1 +1,1 @@
-systemctl status tft35
+sudo systemctl status tft35

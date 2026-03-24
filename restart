@@ -1,1 +1,1 @@
-systemctl restart tft35
+sudo systemctl restart tft35
