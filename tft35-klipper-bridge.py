@@ -162,7 +162,6 @@ def handle_m92(cmd):
     )
 
 
-=======
 #вентиляторы    
     
 def handle_m106(cmd):
@@ -187,6 +186,9 @@ def handle_m123(cmd):
     pwm = int(fan_cache * 255)
     return f"Fan:{pwm}\nok\n"
 
+def handle_default(cmd):
+    send(cmd)
+    return "ok\n"
 
 # -----------------------
 # ПОТОК ОБРАБОТКИ
@@ -205,6 +207,8 @@ threading.Thread(target=worker, daemon=True).start()
 # ОСНОВНОЙ ЦИКЛ
 # -----------------------
 
+nonlogging = {"M114", "M105"}
+
 while True:
     try:
         cmd = ser.readline().decode().strip()
@@ -213,18 +217,16 @@ while True:
 
         func = cmd.split(" ", 1)[0]
 
-	if func != 'M114' and func != 'M105':
+        if func not in nonlogging:
             print(">>", func)
 
         handler = f"handle_{func.lower()}"
         if handler in globals() and callable(globals()[handler]):
             resp = globals()[handler](cmd)
         else:
-            print(f"Функция {handler} не найдена")
-            queue.put(cmd)
-            resp = "ok\n"
+            resp = handle_default(cmd)
 
-        if func != 'M114' and func != 'M105':
+        if func not in nonlogging:
             print("", resp)
 
         ser.write(resp.encode())
